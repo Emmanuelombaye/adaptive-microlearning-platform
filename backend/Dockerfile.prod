@@ -1,0 +1,29 @@
+﻿# Backend multi-stage Dockerfile (production)
+FROM python:3.10-slim AS builder
+
+WORKDIR /app
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Install build deps
+RUN apt-get update && apt-get install -y build-essential gcc libpq-dev --no-install-recommends && rm -rf /var/lib/apt/lists/*
+
+COPY backend/requirements.txt /app/backend-requirements.txt
+RUN python -m pip install --upgrade pip
+RUN pip install --no-cache-dir -r /app/backend-requirements.txt
+
+# Final image
+FROM python:3.10-slim
+
+WORKDIR /app
+COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+# Copy app code
+COPY backend /app
+
+ENV PYTHONPATH=/app
+
+EXPOSE 8000
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers"]
