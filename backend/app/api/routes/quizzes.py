@@ -1,7 +1,9 @@
 from fastapi import APIRouter
+from main.utils.logger import logger
 
-router = APIRouter()
+router = APIRouter(prefix="/api/quizzes", tags=["Quizzes"])
 
 @router.get("/")
 def get_quizzes():
-    return {"quizzes": ["Intro Quiz", "ML Test", "React Challenge"]}
+    logger.info("Fetched quizzes")
+    return {"quizzes": ["Quiz 1", "Quiz 2"]}

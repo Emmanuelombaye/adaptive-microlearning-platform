@@ -1,14 +1,18 @@
 from fastapi import FastAPI
-from app.api.routes import users, courses, quizzes, recommendations
+from backend.app.api.routes import users, courses, quizzes, recommendations
 
-app = FastAPI(title="NeuraLearn API", version="1.0")
+app = FastAPI(
+    title="Adaptive Microlearning Platform",
+    version="1.0.0",
+    description="AI-powered backend for personalized learning"
+)
 
-# Include Routers
-app.include_router(users.router, prefix="/users", tags=["Users"])
-app.include_router(courses.router, prefix="/courses", tags=["Courses"])
-app.include_router(quizzes.router, prefix="/quizzes", tags=["Quizzes"])
-app.include_router(recommendations.router, prefix="/recommendations", tags=["Recommendations"])
+# ? Register routers
+app.include_router(users.router)
+app.include_router(courses.router)
+app.include_router(quizzes.router)
+app.include_router(recommendations.router)
 
 @app.get("/")
 def root():
-    return {"message": "Welcome to NeuraLearn Adaptive Micro-Learning API"}
+    return {"message": "Welcome to the Adaptive Microlearning API!"}
