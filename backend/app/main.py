@@ -1,3 +1,4 @@
+import utils.session
 from fastapi import FastAPI
 from backend.app.api.routes import users, courses, quizzes, recommendations
 
